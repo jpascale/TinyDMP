@@ -1,5 +1,5 @@
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  if (changeInfo.url) {
+  if (changeInfo.url && isParsedWebsite(changeInfo.url)) {
     var user;
     getSavedUsername((username) => {
       if (username) {
@@ -13,9 +13,13 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   }
 });
 
+function isParsedWebsite(url) {
+  return url.indexOf('lanacion.com') > 0 || url.indexOf('infobae.com') > 0 || url.indexOf('clarin.com') > 0;
+}
+
 function sendData(username, ip, url) {
   var base = 'http://10.0.191.117:8000/t/trck';
-  var query = '?name=' + username + '&ip=' + ip + '&url=' + encodeURIComponent(url);
+  var query = '?name=' + username + '&ip=' + ip + '&url=' + encodeURIComponent(url) + '&save=true';
   var request = new XMLHttpRequest();
   request.open("GET", base + query, true);
   request.send(null);
