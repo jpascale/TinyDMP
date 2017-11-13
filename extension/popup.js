@@ -1,18 +1,3 @@
-function getCurrentTabUrl(callback) {
-  // https://developer.chrome.com/extensions/tabs#method-query
-  var queryInfo = {
-    active: true,
-    currentWindow: true
-  };
-
-  chrome.tabs.query(queryInfo, (tabs) => {
-    // See https://developer.chrome.com/extensions/tabs#type-Tab
-    var tab = tabs[0];
-    var url = tab.url;
-    callback(url);
-  });
-}
-
 function getSavedUsername(callback) {
   chrome.storage.sync.get('user', (items) => {
     callback(chrome.runtime.lastError ? null : items['user']);
