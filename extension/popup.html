@@ -1,0 +1,60 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+
+<head>
+  <title>Herolens DMP</title>
+  <style type="text/css">
+    body {
+      margin: 10px;
+      white-space: nowrap;
+    }
+
+    h1 {
+      font-size: 15px;
+    }
+
+    #container {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    #name-input {
+      margin-left: 10px;
+    }
+
+    #submit {
+      margin-top: 5px;
+    }
+
+    #feedback {
+      color: red;
+      font-size: 11px;
+    }
+  </style>
+
+  <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+    -->
+  <script src="popup.js"></script>
+</head>
+
+<body>
+  <h1>Herolens DMP</h1>
+  <p id="feedback"></p>
+  <div id="container">
+    <span>Nombre:</span>
+    <input id="name-input" type="text" />
+  </div>
+  <input id="submit" type="submit" />
+</body>
+
+</html>
