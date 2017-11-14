@@ -8,7 +8,8 @@ const visitSchema = new mongoose.Schema({
     category: String,
     subcategory: String,
     text: String
-  }
+  },
+  train: Boolean
 }, { timestamps: true });
 
 module.exports = mongoose.model("Visit", visitSchema);

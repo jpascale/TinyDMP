@@ -2,12 +2,16 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express();
 const Visit = require("../models/Visit.js");
+import LimduClassifier from "../analizer/classifier_starter";
 
 mongoose.Promise = global.Promise;
+import getClassifier from "../analizer/classifier_starter";
+const classifier: any = getClassifier();
 
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
+
 
 router.get("/trck", (req: any, res: any) => {
   console.log("Team Czerwonagóra & Paszkejl");
@@ -19,12 +23,19 @@ router.get("/trck", (req: any, res: any) => {
   const subcategory = req.query.subcategory;
   const text = req.query.text;
 
-  const save = req.query.save;
+  const train = req.query.train;
   console.log(JSON.stringify(req.query));
 
-  if (save === "true" && name && ip && url) {
-    const data = new Visit({ ip, name, url, content: { category, subcategory, text } });
-    console.log(JSON.stringify({ ip, name, url, content: { category, subcategory, text } }));
+  if (name && ip && url) {
+    let save;
+    if (train === "true") {
+      save = { ip, name, url, content: { category, subcategory, text }, train: true };
+    } else {
+      save = { ip, name, url, content: { category, subcategory, text }, train: false };
+    }
+
+    const data = new Visit(save);
+    console.log(JSON.stringify(save));
     data.save()
       .then((item: any) => {
         return res.send("item saved to database");
@@ -75,6 +86,19 @@ router.get("/filter", (req: any, res: any) => {
     });
   } else {
     return res.status(500).send("Must provide query params");
+  }
+});
+
+router.get("/classify", (req: any, res: any) => {
+  const _id = req.query.id;
+
+  if (_id) {
+    Visit.find({ _id }, function (err: any, visits: any) {
+      classifier.then((c: any) => console.log(c.classify(visits[0].content.text)));
+    });
+
+  } else {
+    return res.status(400).send("Provide id in query");
   }
 });
 

@@ -10,19 +10,34 @@ export default class LimduClassifier {
   });
 
   constructor(samples: { input: string, output: string }[]) {
-    this.intentClassifier.trainBatch(
-      samples.map(item => {
-        return { input: mimir.dict(item.input), output: item.output };
-      })
-    );
-    //   [
-    //   { input: { I: 1, want: 1, an: 1, apple: 1 }, output: "APPLE" },
-    //   { input: { I: 1, want: 1, a: 1, banana: 1 }, output: "BANANA" },
-    //   { input: { I: 1, want: 1, chips: 1 }, output: "CHIPS" }
-    // ]
+
+    const replacedSamples = samples.map(item => {
+      try {
+        const d = mimir.dict(item.input).dict;
+        d[""] = 0; // Patch
+
+        // const removedNans = Object.keys(d).reduce((prev: any, curr: any) => {
+        //   if (d[curr] !== NaN) {
+        //     prev[curr] = d[curr];
+        //   }
+        //   return prev;
+        // }, {});
+
+        return { input: d, output: item.output };
+      } catch (err) {
+        console.log("ERROR " + err + " " + item.input);
+      }
+    });
+
+    // console.log(replacedSamples);
+
+    this.intentClassifier.trainBatch(replacedSamples);
+
   }
 
   public classify(text: string) {
-    return this.intentClassifier.classify(mimir.dict(text));
+    const d = mimir.dict(text).dict;
+    d[""] = 0; // Patch
+    return this.intentClassifier.classify(d);
   }
 }
