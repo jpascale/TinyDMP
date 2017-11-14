@@ -1,26 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const router = express();
+const Visit = require("../models/Visit.js");
+
 mongoose.Promise = global.Promise;
 
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
-
-
-const visitSchema = new mongoose.Schema({
-  ip: String,
-  name: String,
-  url: String,
-  content: {
-    category: String,
-    subcategory: String,
-    text: String
-  }
-}, { timestamps: true });
-
-
-const Visit = mongoose.model("Visit", visitSchema);
 
 router.get("/trck", (req: any, res: any) => {
   console.log("Team Czerwonagóra & Paszkejl");
@@ -45,7 +32,6 @@ router.get("/trck", (req: any, res: any) => {
       .catch((err: any) => {
         return res.send("unable to save to database");
       });
-
   }
 });
 

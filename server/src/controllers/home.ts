@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+const mongoose = require("mongoose");
 
 /**
  * GET /
@@ -6,6 +7,7 @@ import { Request, Response } from "express";
  */
 export let index = (req: Request, res: Response) => {
   res.render("home", {
-    title: "Home"
+    title: "Herolens DMP",
+    ponele: "test"
   });
 };

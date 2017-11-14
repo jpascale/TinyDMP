@@ -71,7 +71,7 @@ function getMetadata(url, doc) {
 }
 
 function sendData(username, ip, url, category, subcategory, text) {
-  var base = 'http://10.0.191.117:8000/t/trck';
+  var base = 'https://03a2fbab.ngrok.io/t/trck';
   var query = '?name=' + username + '&ip=' + ip + '&url=' + encodeURIComponent(url) + '&category=' + category + '&subcategory=' + subcategory + '&text=' + encodeURIComponent(text) + '&save=true';
   var request = new XMLHttpRequest();
   request.open("GET", base + query, true);
@@ -79,7 +79,7 @@ function sendData(username, ip, url, category, subcategory, text) {
 }
 
 function log(data) {
-  var base = 'http://10.0.191.117:8000/t/log';
+  var base = 'http://10.0.191.139:8000/t/log';
   var query = '?log=' + encodeURIComponent(JSON.stringify(data));
   var request = new XMLHttpRequest();
   request.open("GET", base + query, true);
