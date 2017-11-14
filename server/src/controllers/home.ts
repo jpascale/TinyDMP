@@ -14,3 +14,17 @@ export let index = (req: Request, res: Response) => {
     });
   });
 };
+
+/**
+ * GET /:user
+ * User page.
+ */
+export let user = (req: Request, res: Response) => {
+  const user = req.params.user;
+  Visit.find({ name: user }, function (err: any, visits: any) {
+    res.render("user", {
+      title: user,
+      visits: visits
+    });
+  });
+};
