@@ -127,9 +127,11 @@ export let mapPost = (req: Request, res: Response) => {
   const data = new Mapping(req.body);
   data.save()
     .then((item: any) => {
-      return res.send("item saved to database");
+      req.flash("success", { msg: "Se guardo el mapping" });
+      return res.redirect("/map");
     })
     .catch((err: any) => {
-      return res.send("unable to save to database");
+      req.flash("errors", { msg: "Hubo un error :(" });
+      return res.redirect("/map");
     });
 };
