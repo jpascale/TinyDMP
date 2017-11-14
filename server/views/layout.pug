@@ -13,10 +13,12 @@ html
   body
     include partials/header
 
-    .container
-      include partials/flash
-      block content
-
     script(src='/js/lib/jquery-3.1.1.min.js')
     script(src='/js/lib/bootstrap.min.js')
     script(src='/js/main.js')
+    script(src='https://d3js.org/d3.v4.min.js')
+    script(src='https://d3js.org/d3-scale-chromatic.v1.min.js')
+
+    .container
+      include partials/flash
+      block content

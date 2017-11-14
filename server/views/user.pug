@@ -3,17 +3,102 @@ extends layout
 block content
   h1 #{title}
   hr
-  div
+  .row.text-center(style={background: '#e9e9e9'})
+    .col-sm-6
+      div(id='categories')
+      script(type="text/javascript").
+        //- Categories
+        var color = d3.scaleOrdinal(d3.schemePastel1);
+
+        var arc = d3.arc()
+          .innerRadius(40)
+          .outerRadius(90);
+
+        var pie = d3.pie()
+          .value(function (d) { return d.count; })
+          .sort(null);
+
+        var w = 300, h = 200;
+
+        var g = d3.select("#categories")
+          .append("svg")
+            .attr('width', w)
+            .attr('height', h)
+            .append('g')
+            .attr('transform', 'translate(' + (w / 2) + ',' + (h / 2) + ')');
+
+        g.selectAll('.categories')
+        .data(pie(!{JSON.stringify(categories)}))
+          .enter()
+          .append('g')
+          .append('path')
+          .attr('d', arc)
+          .attr('fill', (d, i) => color(i));
+
+        g.selectAll('.categoriesText')
+          .data(pie(!{JSON.stringify(categories)}))
+          .enter()
+          .append('text')
+          .attr('transform', function (d) { return "translate(" + arc.centroid(d) + ")"; })
+          .attr("dy", ".4em")
+          .attr("text-anchor", "middle")
+          .text(function (d) { return d.data.name + ' - ' + d.data.count; })
+          .style('fill', 'black')
+          .style('font-size', '70%');
+    .col-sm-6
+      div(id='websites')
+      script(type="text/javascript").
+        //- Websites
+        var color = d3.scaleOrdinal().range([d3.rgb("#0084B5"), d3.rgb("#D80026"), d3.rgb("#F68E01")]);
+
+        var arc = d3.arc()
+          .innerRadius(40)
+          .outerRadius(90);
+
+        var pie = d3.pie()
+          .value(function (d) { return d.count; })
+          .sort(null);
+
+        var w = 300, h = 200;
+
+        var g = d3.select("#websites")
+          .append("svg")
+            .attr('width', w)
+            .attr('height', h)
+            .append('g')
+            .attr('transform', 'translate(' + (w / 2) + ',' + (h / 2) + ')');
+
+        g.selectAll('.website')
+        .data(pie(!{JSON.stringify(websites)}))
+          .enter()
+          .append('g')
+          .append('path')
+          .attr('d', arc)
+          .attr('fill', (d, i) => color(i));
+
+        g.selectAll('.websiteText')
+          .data(pie(!{JSON.stringify(websites)}))
+          .enter()
+          .append('text')
+          .attr('transform', function (d) { return "translate(" + arc.centroid(d) + ")"; })
+          .attr("dy", ".4em")
+          .attr("text-anchor", "middle")
+          .text(function (d) { return d.data.name + ' - ' + d.data.count; })
+          .style('fill', 'black')
+          .style('font-size', '100%');
+  hr
   table.table.table-striped
     thead
       tr
         th Usuario
         th IP
         th URL
+        th Categoría
     tbody
-      each visit, i in visits
+      each visit in visits
         tr
           td #{visit.name}
           td #{visit.ip}
           td
             a(href=visit.url) #{visit.url}
+          td #{visit.content.category}

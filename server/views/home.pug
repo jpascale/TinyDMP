@@ -11,11 +11,13 @@ block content
         th Usuario
         th IP
         th URL
+        th Categoría
     tbody
-      each visit, i in visits
+      each visit in visits
         tr
           td
             a(href=`/` + visit.name) #{visit.name}
           td #{visit.ip}
           td
             a(href=visit.url) #{visit.url}
+          td #{visit.content.category}
