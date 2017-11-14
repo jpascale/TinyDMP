@@ -111,4 +111,40 @@ router.get("/classify", (req: any, res: any) => {
   }
 });
 
+router.get("/recommend", (req: any, res: any) => {
+  const user = req.query.user;
+  if (user) {
+    Visit.find({ name: user }, function (err: any, visits: any) {
+      const categoriesArray: { name: string, count: number }[] = [];
+      const categories: any = {};
+      visits.forEach((visit: any) => {
+        // Categories
+        const c = categories[visit.content.category];
+        if (c) {
+          categories[visit.content.category] = c + 1;
+        } else {
+          categories[visit.content.category] = 1;
+        }
+      });
+      Object.keys(categories).forEach(element => {
+        categoriesArray.push({
+          name: element,
+          count: categories[element]
+        });
+      });
+
+      // There's no real number bigger than plus Infinity
+      let tmp: any = undefined;
+      for (let i = categoriesArray.length - 1; i >= 0; i--) {
+        if (!tmp || categoriesArray[i].count > tmp.count) {
+          tmp = categoriesArray[i];
+        }
+      }
+      res.send(tmp.name);
+    });
+  } else {
+    return res.status(400).send("Provide user in query");
+  }
+});
+
 export default router;
