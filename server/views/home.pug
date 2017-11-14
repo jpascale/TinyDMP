@@ -4,4 +4,16 @@ block content
   h1 Herolens DMP
   p.lead Un prototipo para la HeroHack 2017.
   hr
-  p #{ponele}
+  div
+  table.table.table-striped
+    thead
+      tr
+        th Usuario
+        th IP
+        th URL
+    tbody
+      each visit, i in visits
+        tr
+          td #{visit.name}
+          td #{visit.ip}
+          td #{visit.url}
