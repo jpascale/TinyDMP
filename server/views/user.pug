@@ -94,6 +94,7 @@ block content
         th IP
         th URL
         th Categoría
+        th Mapping
     tbody
       each visit in visits
         tr
@@ -102,3 +103,4 @@ block content
           td
             a(href=visit.url) #{visit.url}
           td #{visit.content.category}
+          td #{visit.mapping}
