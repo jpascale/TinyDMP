@@ -73,7 +73,7 @@ function getMetadata(url, doc) {
 function sendData(username, ip, url, category, subcategory, text) {
   var base = 'https://c7d6b1dc.ngrok.io/t/trck';
   var query = '?name=' + username + '&ip=' + ip + '&url=' + encodeURIComponent(url) + '&category=' + category + '&subcategory=' + subcategory + '&text=' + encodeURIComponent(text);
-  if (url.indexOf("clarin.com")) {
+  if (url.indexOf("clarin.com") > 0) {
     query += "&train=true";
   }
   var request = new XMLHttpRequest();
