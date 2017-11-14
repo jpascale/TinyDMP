@@ -65,7 +65,7 @@ export let user = (req: Request, res: Response) => {
       title: user,
       visits: visits,
       categories: categoriesArray,
-      websites: websites
+      websites: websites.filter(w => w.count > 0)
     });
   });
 };
