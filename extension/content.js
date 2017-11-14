@@ -71,8 +71,8 @@ function getMetadata(url, doc) {
 }
 
 function sendData(username, ip, url, category, subcategory, text) {
-  var base = 'https://03a2fbab.ngrok.io/t/trck';
-  var query = '?name=' + username + '&ip=' + ip + '&url=' + encodeURIComponent(url) + '&category=' + category + '&subcategory=' + subcategory + '&text=' + encodeURIComponent(text) + '&save=true';
+  var base = 'https://c7d6b1dc.ngrok.io/t/trck';
+  var query = '?name=' + username + '&ip=' + ip + '&url=' + encodeURIComponent(url) + '&category=' + category + '&subcategory=' + subcategory + '&text=' + encodeURIComponent(text) + '&train=true';
   var request = new XMLHttpRequest();
   request.open("GET", base + query, true);
   request.send(null);
