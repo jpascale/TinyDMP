@@ -2,7 +2,6 @@ extends layout
 
 block content
   h1 #{title}
-  p.lead Un prototipo para la HeroHack 2017.
   hr
   div
   table.table.table-striped
@@ -16,4 +15,5 @@ block content
         tr
           td #{visit.name}
           td #{visit.ip}
-          td #{visit.url}
+          td
+            a(href=visit.url) #{visit.url}
