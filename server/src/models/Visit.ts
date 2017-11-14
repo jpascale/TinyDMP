@@ -7,7 +7,8 @@ const visitSchema = new mongoose.Schema({
   content: {
     category: String,
     subcategory: String,
-    text: String
+    text: String,
+    inferred_category: { type: Array, "default": [] },
   },
   train: Boolean
 }, { timestamps: true });

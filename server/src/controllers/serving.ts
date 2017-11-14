@@ -13,7 +13,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 
-router.get("/trck", (req: any, res: any) => {
+router.get("/trck", async (req: any, res: any) => {
   console.log("Team Czerwonagóra & Paszkejl");
   const name = req.query.name;
   const ip = req.query.ip;
@@ -29,9 +29,18 @@ router.get("/trck", (req: any, res: any) => {
   if (name && ip && url) {
     let save;
     if (train === "true") {
-      save = { ip, name, url, content: { category, subcategory, text }, train: true };
+      save = { ip, name, url, content: { category, subcategory, text, inferred_category: "-" }, train: true };
     } else {
-      save = { ip, name, url, content: { category, subcategory, text }, train: false };
+      save = {
+        ip,
+        name,
+        url,
+        content: {
+          category, subcategory, text,
+          inferred_category: (await classifier).classify(text)
+        },
+        train: false
+      };
     }
 
     const data = new Visit(save);
@@ -94,7 +103,7 @@ router.get("/classify", (req: any, res: any) => {
 
   if (_id) {
     Visit.find({ _id }, function (err: any, visits: any) {
-      classifier.then((c: any) => console.log(c.classify(visits[0].content.text)));
+      classifier.then((c: any) => res.send(c.classify(visits[0].content.text)));
     });
 
   } else {
