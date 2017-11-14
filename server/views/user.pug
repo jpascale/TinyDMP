@@ -1,8 +1,7 @@
 extends layout
 
 block content
-  h1 Herolens DMP
-  p.lead Un prototipo para la HeroHack 2017.
+  h1 #{title}
   hr
   div
   table.table.table-striped
@@ -14,8 +13,7 @@ block content
     tbody
       each visit, i in visits
         tr
-          td
-            a(href=`/` + visit.name) #{visit.name}
+          td #{visit.name}
           td #{visit.ip}
           td
             a(href=visit.url) #{visit.url}
