@@ -95,6 +95,7 @@ block content
         th URL
         th Categoría
         th Mapping
+        th Inferido
     tbody
       each visit in visits
         tr
@@ -104,3 +105,4 @@ block content
             a(href=visit.url) #{visit.url}
           td #{visit.content.category}
           td #{visit.mapping}
+          td #{visit.content.inferred_category}
