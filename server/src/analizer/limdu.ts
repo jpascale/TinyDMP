@@ -6,7 +6,8 @@ export default class LimduClassifier {
 
   private MyWinnow = limdu.classifiers.Winnow.bind(0, { retrain_count: 10 });
   private intentClassifier = new limdu.classifiers.multilabel.BinaryRelevance({
-    binaryClassifierType: this.MyWinnow
+    binaryClassifierType: this.MyWinnow,
+    normalizer: limdu.features.LowerCaseNormalizer
   });
 
   constructor(samples: { input: string, output: string }[]) {

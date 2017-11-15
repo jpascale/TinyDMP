@@ -1,8 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const router = express();
+const limdu = require("limdu");
 const Visit = require("../models/Visit.js");
+const serialize = require("serialization");
 import LimduClassifier from "../analizer/classifier_starter";
+const fs = require("fs");
 
 mongoose.Promise = global.Promise;
 import getClassifier from "../analizer/classifier_starter";
@@ -26,18 +29,33 @@ router.get("/trck", async (req: any, res: any) => {
   const train = req.query.train;
   console.log(JSON.stringify(req.query));
 
+  const classifications = await (await classifier).classify(text);
+
   if (name && ip && url) {
     let save;
-    if (train === "true") {
-      save = { ip, name, url, content: { category, subcategory, text, inferred_category: "-" }, train: true };
+    if (train === "true" || (classifications.length === 0 && category)) {
+      save = {
+        ip,
+        name,
+        url,
+        content: {
+          category,
+          subcategory,
+          text,
+          inferred_category: "-"
+        },
+        train: true
+      };
     } else {
       save = {
         ip,
         name,
         url,
         content: {
-          category, subcategory, text,
-          inferred_category: (await classifier).classify(text)
+          category,
+          subcategory,
+          text,
+          inferred_category: classifications
         },
         train: false
       };
@@ -109,6 +127,29 @@ router.get("/classify", (req: any, res: any) => {
   } else {
     return res.status(400).send("Provide id in query");
   }
+});
+
+router.get("/str", async (req: any, res: any) => {
+
+  const _id = req.query.id;
+
+  const newOjb = () => {
+    const MyWinnow = limdu.classifiers.Winnow.bind(0, { retrain_count: 10 });
+    const intentClassifier = new limdu.classifiers.multilabel.BinaryRelevance({
+      binaryClassifierType: MyWinnow,
+      normalizer: limdu.features.LowerCaseNormalizer,
+    });
+    return intentClassifier;
+  };
+
+  const serialization: string = serialize.toString((await classifier), newOjb);
+  fs.writeFileSync("serialization.txt", serialization, "UTF-8", { "flags": "w+" });
+  const deserialization = serialize.fromString(serialization, "serialization.txt");
+
+  Visit.find({ _id }, (err: any, visits: any) => res.send(deserialization.classify(visits[0].content.text)));
+
+  // return res.send(serialize.toString((await classifier), newOjb));
+
 });
 
 export default router;
