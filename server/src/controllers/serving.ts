@@ -3,7 +3,11 @@ const mongoose = require("mongoose");
 const router = express();
 const limdu = require("limdu");
 const Visit = require("../models/Visit.js");
+<<<<<<< HEAD
 const serialize = require("serialization");
+=======
+const Mapping = require("../models/Map.js");
+>>>>>>> master
 import LimduClassifier from "../analizer/classifier_starter";
 const fs = require("fs");
 
@@ -130,6 +134,7 @@ router.get("/classify", (req: any, res: any) => {
   }
 });
 
+<<<<<<< HEAD
 router.get("/str", async (req: any, res: any) => {
 
   const _id = req.query.id;
@@ -153,4 +158,93 @@ router.get("/str", async (req: any, res: any) => {
 
 });
 
+=======
+router.get("/recommend", (req: any, res: any) => {
+  const user = req.query.user;
+  if (user) {
+    Visit.find({ name: user }, function (err: any, visits: any) {
+      const categoriesArray: { name: string, count: number }[] = [];
+      const categories: any = {};
+      visits.forEach((visit: any) => {
+        // Categories
+        const c = categories[visit.content.category];
+        if (c) {
+          categories[visit.content.category] = c + 1;
+        } else {
+          categories[visit.content.category] = 1;
+        }
+      });
+      Object.keys(categories).forEach(element => {
+        categoriesArray.push({
+          name: element,
+          count: categories[element]
+        });
+      });
+
+      // There's no real number bigger than plus Infinity
+      let tmp: any = undefined;
+      for (let i = categoriesArray.length - 1; i >= 0; i--) {
+        if (!tmp || categoriesArray[i].count > tmp.count) {
+          tmp = categoriesArray[i];
+        }
+      }
+      res.send(tmp.name);
+    });
+  } else {
+    return res.status(400).send("Provide user in query");
+  }
+});
+
+router.get("/recommendMapping", (req: any, res: any) => {
+  const user = req.query.user;
+  if (user) {
+    Visit.find({ name: user }, function (err: any, visits: any) {
+      Mapping.find({}, function (err: any, mappings: any) {
+        const categoriesArray: { name: string, count: number }[] = [];
+        const categories: any = {};
+        visits.forEach((visit: any) => {
+          // Categories
+          const cat = mapCategory(mappings, visit.content.category);
+          const c = categories[cat];
+          if (c) {
+            categories[cat] = c + 1;
+          } else {
+            categories[cat] = 1;
+          }
+        });
+        Object.keys(categories).forEach(element => {
+          if (element && element.length > 0) {
+            categoriesArray.push({
+              name: element,
+              count: categories[element]
+            });
+          }
+        });
+
+        // There's no real number bigger than plus Infinity
+        let tmp: any = undefined;
+        for (let i = categoriesArray.length - 1; i >= 0; i--) {
+          if (!tmp || categoriesArray[i].count > tmp.count) {
+            tmp = categoriesArray[i];
+          }
+        }
+        res.send(tmp.name);
+      });
+    });
+  } else {
+    return res.status(400).send("Provide user in query");
+  }
+});
+
+const mapCategory = (mappings: any, category: any) => {
+  let ret: string = "";
+  mappings.forEach((map: any) => {
+    if (map.categories.includes(category)) {
+      ret = map.name;
+    }
+  });
+  return ret;
+};
+
+>>>>>>> master
 export default router;

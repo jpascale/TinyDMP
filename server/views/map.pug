@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1 Mapping
+  hr
+  form(action='/map',method='post')
+    select.form-control(multiple="true", name="categories")
+      each c in categories
+        option(value=c) #{c}
+    input.form-control(type="text", name="name", style={margin: '15px 0 0 0'}, placeholder="Nombre")
+    input.form-control.btn.btn-primary(type="submit", style={margin: '15px 0 0 0'})
