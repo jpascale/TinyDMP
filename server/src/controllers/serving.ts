@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express();
 const Visit = require("../models/Visit.js");
+const Mapping = require("../models/Map.js");
 import LimduClassifier from "../analizer/classifier_starter";
 
 mongoose.Promise = global.Promise;
@@ -146,5 +147,56 @@ router.get("/recommend", (req: any, res: any) => {
     return res.status(400).send("Provide user in query");
   }
 });
+
+router.get("/recommendMapping", (req: any, res: any) => {
+  const user = req.query.user;
+  if (user) {
+    Visit.find({ name: user }, function (err: any, visits: any) {
+      Mapping.find({}, function (err: any, mappings: any) {
+        const categoriesArray: { name: string, count: number }[] = [];
+        const categories: any = {};
+        visits.forEach((visit: any) => {
+          // Categories
+          const cat = mapCategory(mappings, visit.content.category);
+          const c = categories[cat];
+          if (c) {
+            categories[cat] = c + 1;
+          } else {
+            categories[cat] = 1;
+          }
+        });
+        Object.keys(categories).forEach(element => {
+          if (element && element.length > 0) {
+            categoriesArray.push({
+              name: element,
+              count: categories[element]
+            });
+          }
+        });
+
+        // There's no real number bigger than plus Infinity
+        let tmp: any = undefined;
+        for (let i = categoriesArray.length - 1; i >= 0; i--) {
+          if (!tmp || categoriesArray[i].count > tmp.count) {
+            tmp = categoriesArray[i];
+          }
+        }
+        res.send(tmp.name);
+      });
+    });
+  } else {
+    return res.status(400).send("Provide user in query");
+  }
+});
+
+const mapCategory = (mappings: any, category: any) => {
+  let ret: string = "";
+  mappings.forEach((map: any) => {
+    if (map.categories.includes(category)) {
+      ret = map.name;
+    }
+  });
+  return ret;
+};
 
 export default router;
