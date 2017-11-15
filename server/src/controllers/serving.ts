@@ -3,11 +3,8 @@ const mongoose = require("mongoose");
 const router = express();
 const limdu = require("limdu");
 const Visit = require("../models/Visit.js");
-<<<<<<< HEAD
 const serialize = require("serialization");
-=======
 const Mapping = require("../models/Map.js");
->>>>>>> master
 import LimduClassifier from "../analizer/classifier_starter";
 const fs = require("fs");
 
@@ -134,7 +131,6 @@ router.get("/classify", (req: any, res: any) => {
   }
 });
 
-<<<<<<< HEAD
 router.get("/str", async (req: any, res: any) => {
 
   const _id = req.query.id;
@@ -158,7 +154,6 @@ router.get("/str", async (req: any, res: any) => {
 
 });
 
-=======
 router.get("/recommend", (req: any, res: any) => {
   const user = req.query.user;
   if (user) {
@@ -246,5 +241,4 @@ const mapCategory = (mappings: any, category: any) => {
   return ret;
 };
 
->>>>>>> master
 export default router;
