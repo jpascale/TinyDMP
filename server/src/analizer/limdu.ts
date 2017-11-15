@@ -41,4 +41,10 @@ export default class LimduClassifier {
     d[""] = 0; // Patch
     return this.intentClassifier.classify(d);
   }
+
+  public learn(text: string, output: string) {
+    const d = mimir.dict(text).dict;
+    d[""] = 0; // Patch
+    this.intentClassifier.trainBatch([{ input: d, output: output }]);
+  }
 }

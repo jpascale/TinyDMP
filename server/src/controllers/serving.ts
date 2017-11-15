@@ -46,6 +46,7 @@ router.get("/trck", async (req: any, res: any) => {
         },
         train: true
       };
+      (await classifier).learn(text, category);
     } else {
       save = {
         ip,
