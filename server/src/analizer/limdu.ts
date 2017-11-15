@@ -6,7 +6,8 @@ export default class LimduClassifier {
 
   private MyWinnow = limdu.classifiers.Winnow.bind(0, { retrain_count: 10 });
   private intentClassifier = new limdu.classifiers.multilabel.BinaryRelevance({
-    binaryClassifierType: this.MyWinnow
+    binaryClassifierType: this.MyWinnow,
+    normalizer: limdu.features.LowerCaseNormalizer
   });
 
   constructor(samples: { input: string, output: string }[]) {
@@ -39,5 +40,11 @@ export default class LimduClassifier {
     const d = mimir.dict(text).dict;
     d[""] = 0; // Patch
     return this.intentClassifier.classify(d);
+  }
+
+  public learn(text: string, output: string) {
+    const d = mimir.dict(text).dict;
+    d[""] = 0; // Patch
+    this.intentClassifier.trainBatch([{ input: d, output: output }]);
   }
 }
